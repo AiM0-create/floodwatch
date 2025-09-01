@@ -1,19 +1,15 @@
-# 🌊 Global Flood Watch — Streamlit Cloud
+# 🌊 Global Flood Watch — Streamlit Cloud (Python 3.11)
 
-Sentinel-1 RTC (via STAC on Microsoft Planetary Computer) + JRC Global Surface Water (occurrence)
-to flag **new water** (potential floods). Cloud-friendly and parameterized.
+**Fix for your install errors:** Streamlit Cloud was using Python 3.13, which lacks wheels for Rasterio/PyProj.
+This repo pins Python via `.streamlit/runtime.txt` to **3.11** and uses wheel-friendly package versions.
 
-## Deploy on Streamlit Cloud
-1. Create a new GitHub repo and upload these files.
-2. On https://share.streamlit.io, click **New app**, pick your repo, and set main file to `app_streamlit.py`.
-3. Deploy. First run: start with the **India** preset, `grid_step ≥ 2°`.
+## Deploy
+1) Push these files to a GitHub repo.  
+2) On Streamlit Cloud → New app → main file: `app_streamlit.py`.  
+3) First run: choose **India** preset and keep `grid_step ≥ 2°`.
 
-## Local (optional)
+## Local
 ```bash
 pip install -r requirements.txt
 streamlit run app_streamlit.py
 ```
-
-## Notes
-- Uses public STAC (no API keys). Assets are signed automatically via `planetary_computer.sign_inplace`.
-- Defaults are **Cloud-safe** (caps + caching). For global scans, consider a VM with more RAM/CPU.
