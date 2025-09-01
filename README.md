@@ -1,15 +1,36 @@
-# 🌊 Global Flood Watch — Streamlit Cloud (Python 3.11)
 
-**Fix for your install errors:** Streamlit Cloud was using Python 3.13, which lacks wheels for Rasterio/PyProj.
-This repo pins Python via `.streamlit/runtime.txt` to **3.11** and uses wheel-friendly package versions.
+# 🌊 Global Flood Watch — Docker app (Streamlit)
 
-## Deploy
-1) Push these files to a GitHub repo.  
-2) On Streamlit Cloud → New app → main file: `app_streamlit.py`.  
-3) First run: choose **India** preset and keep `grid_step ≥ 2°`.
+Streamlit Cloud had geo wheels issues. This repo uses **Conda (conda-forge)** inside Docker,
+so `rasterio/pyproj/geopandas` install cleanly anywhere.
 
-## Local
+## Option A — Run locally with Docker
 ```bash
-pip install -r requirements.txt
-streamlit run app_streamlit.py
+docker build -t floodwatch .
+docker run -p 8501:8501 floodwatch
+# open http://localhost:8501
 ```
+
+## Option B — Deploy to Google Cloud Run
+```bash
+gcloud builds submit --tag gcr.io/PROJECT_ID/floodwatch
+gcloud run deploy floodwatch --image gcr.io/PROJECT_ID/floodwatch --platform managed --region asia-south1 --allow-unauthenticated
+```
+
+## Option C — Deploy to Render (free tier)
+- Connect repo at https://render.com
+- Choose **Docker** and leave defaults, or use `render.yaml` in this repo.
+
+## Option D — Railway / Fly.io / EC2
+Any Docker host works:
+- Railway: New Project → Deploy from repo (Dockerfile auto-detected)
+- Fly.io: `fly launch` then `fly deploy`
+
+## Why Docker + conda-forge?
+Geospatial libs need GDAL/PROJ. The conda-forge stack ships prebuilt binaries,
+so no compilation headaches.
+
+### Notes
+- Public STAC; no secrets needed.
+- Start with **India** preset and `grid_step ≥ 2°`.
+- Increase resources for larger/global scans.
