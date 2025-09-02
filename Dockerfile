@@ -1,17 +1,14 @@
+# Render-friendly Dockerfile: listens on $PORT
+FROM mambaorg/micromamba:1.5.8
 
-# Use mambaforge for fast conda installs
-FROM mambaorg/micromamba:1.5.8 as base
-
-# Create env
 COPY environment.yml /tmp/environment.yml
-RUN micromamba install -y -n base -f /tmp/environment.yml &&     micromamba clean --all --yes
+RUN micromamba install -y -n base -f /tmp/environment.yml && micromamba clean --all --yes
 
-# Set workdir
 WORKDIR /app
 COPY . /app
 
-# Streamlit port
-EXPOSE 8501
+# Render sets $PORT dynamically; Streamlit must bind to it
+ENV PORT=10000
+EXPOSE 10000
 
-# Default command
-CMD ["bash", "-lc", "streamlit run app_streamlit.py --server.port=8501 --server.address=0.0.0.0"]
+CMD ["bash","-lc","streamlit run app_streamlit.py --server.address=0.0.0.0 --server.port=${PORT} --browser.gatherUsageStats=false"]

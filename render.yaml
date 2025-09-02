@@ -1,7 +1,10 @@
-
 services:
   - type: web
     name: floodwatch
     env: docker
     plan: starter
     autoDeploy: true
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: PORT
+        value: 10000

@@ -1,4 +1,3 @@
-
 import json
 import pandas as pd
 import pydeck as pdk
@@ -63,13 +62,6 @@ if run_btn:
         st.dataframe(df, use_container_width=True)
 
         st.subheader("Map")
-        rows_map = [{
-            "polygon": [[p["lon_min"], p["lat_min"]], [p["lon_max"], p["lat_min"]],
-                        [p["lon_max"], p["lat_max"]], [p["lon_min"], p["lat_max"]]],
-            "intensity": p["intensity_0to1"],
-            "new_km2": p["new_water_km2"]
-        } for p in gj["features"][0]["properties"]] if False else []
-
         layers = []
         for f in gj["features"]:
             p = f["properties"]
@@ -79,7 +71,6 @@ if run_btn:
                 "intensity": p["intensity_0to1"],
                 "new_km2": p["new_water_km2"]
             })
-
         layer = pdk.Layer(
             "PolygonLayer",
             data=layers,

@@ -1,4 +1,3 @@
-
 import json, datetime as dt
 from typing import Dict, List, Optional, Tuple
 
